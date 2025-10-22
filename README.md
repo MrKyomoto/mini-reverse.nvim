@@ -11,11 +11,11 @@ A lightweight Neovim plugin, aiming to auto **reverse** the paired content(i.e. 
 ### Using Lazy.nvim
 ```lua
 {
-  'MrKyomoto/mini-reverse',
+  'MrKyomoto/mini-reverse.nvim',
   config = function()
     require('mini.reverse').setup({
       -- Custom key mapping (default is 'tr')
-      mappings = { toggle = 'gr' },  -- 'gr' stands for "go reverse"
+      mappings = { toggle = 'tr' },  -- 'tr' stands for "toggle reverse"
 
       -- Extend reverse pairs (defaults include left/right, <, >, etc.)
       reverse_pairs = {
