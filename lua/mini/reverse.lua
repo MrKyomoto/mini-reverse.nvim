@@ -149,16 +149,16 @@ end
 -- Get the content in cursor
 H.get_cursor_word = function()
 	local line = vim.api.nvim_get_current_line()
-	local cursor_col = vim.api.nvim_win_get_cursor(0)[2] -- 0-based
+	local cursor_col = vim.api.nvim_win_get_cursor(0)[2]
 
 	local pattern = "[a-zA-Z0-9_]+|[<>!=]=?|[-+*/]"
 
-	for start, finish in line:gmatch("()(" .. pattern .. ")()") do
-		local start_idx = start - 1
-		local end_idx = finish - 2
+	for start_pos, match, end_pos in line:gmatch("()(" .. pattern .. ")()") do
+		local start_idx = start_pos - 1
+		local end_idx = end_pos - 2
 
 		if cursor_col >= start_idx and cursor_col <= end_idx then
-			return line:sub(start, finish - 1)
+			return match
 		end
 	end
 
