@@ -1,7 +1,7 @@
 local MiniReverse = {}
 local H = {}
 
--- 模块默认配置
+-- default config
 MiniReverse.config = {
 	mappings = { toggle = "tr" },
 	reverse_pairs = {
@@ -11,12 +11,12 @@ MiniReverse.config = {
 		["down"] = "up",
 		["true"] = "false",
 		["false"] = "true",
-    ["+"] = "-",
-    ["-"] = "+",
-    ["^"] = "_", -- NOTE: for LaTex reason this is added to default config xd
-    ["_"] = "^",
-    ["/"] = "\\",
-    ["\\"] = "/",
+		["+"] = "-",
+		["-"] = "+",
+		["^"] = "_", -- NOTE: for LaTex reason this is added to default config xd
+		["_"] = "^",
+		["/"] = "\\",
+		["\\"] = "/",
 		["<"] = ">",
 		[">"] = "<",
 		["<="] = ">=",
@@ -32,7 +32,6 @@ MiniReverse.config = {
 	silent = false,
 }
 
--- 初始化函数
 MiniReverse.setup = function(config)
 	_G.MiniReverse = MiniReverse
 	config = H.setup_config(config)
@@ -40,7 +39,7 @@ MiniReverse.setup = function(config)
 	H.create_autocommands()
 end
 
--- 核心功能：反转内容
+-- NOTE: core fun: auto reverse
 MiniReverse.toggle = function(mode)
 	if H.is_disabled() then
 		return
@@ -48,7 +47,7 @@ MiniReverse.toggle = function(mode)
 
 	local range = H.get_target_range(mode)
 	if not range then
-		H.message("未找到可反转的内容")
+		H.message("Found no reversable contents")
 		return
 	end
 
@@ -59,7 +58,7 @@ MiniReverse.toggle = function(mode)
 
 	local reversed = H.get_reversed(current)
 	if not reversed then
-		H.message("无匹配的反转内容: " .. current)
+		H.message("Found no matched reversabled contents: " .. current)
 		return
 	end
 
@@ -68,7 +67,6 @@ MiniReverse.toggle = function(mode)
 	H.set_cursor(range.end_row + 1, range.start_col + #reversed + 1)
 end
 
--- 配置处理
 H.setup_config = function(config)
 	config = vim.tbl_deep_extend("force", vim.deepcopy(MiniReverse.config), config or {})
 	H.check_type("mappings", config.mappings, "table")
@@ -78,7 +76,6 @@ H.setup_config = function(config)
 	return config
 end
 
--- 应用配置（设置映射）
 H.apply_config = function(config)
 	MiniReverse.config = config
 	local m = config.mappings
@@ -87,30 +84,30 @@ H.apply_config = function(config)
 		vim.keymap.set("n", m.toggle, function()
 			MiniReverse.toggle("normal")
 		end, {
-			desc = "反转光标下的内容",
+			-- NOTE: normal mode
+			desc = "Reverse the content in cursor",
 			silent = true,
 		})
 	end
 
 	if m.toggle ~= "" then
 		vim.keymap.set("v", m.toggle, ":<C-u>lua MiniReverse.toggle('visual')<CR>", {
-			desc = "反转选中的内容",
+			-- NOTE: visual mode
+			desc = "Reverse the content selected",
 			silent = true,
 		})
 	end
 end
 
--- 创建自动命令
 H.create_autocommands = function()
 	local augroup = vim.api.nvim_create_augroup("MiniReverse", { clear = true })
 end
 
--- 检查是否禁用
 H.is_disabled = function()
 	return vim.g.minireverse_disable == true or vim.b.minireverse_disable == true
 end
 
--- 获取目标内容范围
+-- Get the range of the selected content
 H.get_target_range = function(mode)
 	if mode == "visual" then
 		local start_pos = vim.api.nvim_buf_get_mark(0, "<")
@@ -149,33 +146,25 @@ H.get_target_range = function(mode)
 	end
 end
 
--- 获取光标下的单词/符号（彻底修复 iskeyword 问题）
+-- Get the content in cursor
 H.get_cursor_word = function()
-	-- 方法改进：不修改 iskeyword，直接通过正则匹配获取单词和符号
 	local line = vim.api.nvim_get_current_line()
 	local cursor_col = vim.api.nvim_win_get_cursor(0)[2] -- 0-based
 
-	-- 匹配单词（字母、数字、下划线）和符号（其他字符）
-	-- 正则模式：匹配单词或连续符号
 	local pattern = "[a-zA-Z0-9_]+|[<>!=]=?|[-+*/]"
 
-	-- 遍历所有匹配项，找到包含光标位置的项
 	for start, finish in line:gmatch("()(" .. pattern .. ")()") do
-		-- 转换为 0-based 索引
 		local start_idx = start - 1
 		local end_idx = finish - 2
 
-		-- 检查光标是否在当前匹配项范围内
 		if cursor_col >= start_idx and cursor_col <= end_idx then
 			return line:sub(start, finish - 1)
 		end
 	end
 
-	-- 如果没找到匹配，返回光标位置的单个字符
 	return line:sub(cursor_col + 1, cursor_col + 1)
 end
 
--- 在行中查找单词位置
 H.find_word_in_line = function(line, word, col)
 	local len = #word
 	local search_start = math.max(1, col - len + 1) -- 1-based
@@ -187,12 +176,11 @@ H.find_word_in_line = function(line, word, col)
 		return nil
 	end
 
-	local start_col = search_start + start_in_search - 2 -- 转换为 0-based
+	local start_col = search_start + start_in_search - 2
 	local end_col = search_start + end_in_search - 1
 	return start_col, end_col
 end
 
--- 获取反转后的值
 H.get_reversed = function(current)
 	if not MiniReverse.config.ignore_case then
 		return MiniReverse.config.reverse_pairs[current]
@@ -213,22 +201,22 @@ H.get_reversed = function(current)
 	return nil
 end
 
--- 设置光标位置
+-- Set the position of cursor
 H.set_cursor = function(line, col)
 	vim.api.nvim_win_set_cursor(0, { line, col - 1 })
 end
 
--- 显示提示信息
+-- Display Hint
 H.message = function(msg)
 	if not MiniReverse.config.silent then
 		vim.notify("[mini.reverse] " .. msg, vim.log.levels.INFO)
 	end
 end
 
--- 类型检查
+-- Type checker
 H.check_type = function(name, val, expected_type)
 	if type(val) ~= expected_type then
-		error(("mini.reverse: %s 必须是 %s 类型，实际是 %s"):format(name, expected_type, type(val)))
+		error(("mini.reverse: %s must be %s Type, but it is %s"):format(name, expected_type, type(val)))
 	end
 end
 
