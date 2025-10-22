@@ -5,12 +5,18 @@ local H = {}
 MiniReverse.config = {
 	mappings = { toggle = "tr" },
 	reverse_pairs = {
-		-- 方向类
 		["left"] = "right",
 		["right"] = "left",
 		["up"] = "down",
 		["down"] = "up",
-		-- 符号类
+		["true"] = "false",
+		["false"] = "true",
+    ["+"] = "-",
+    ["-"] = "+",
+    ["^"] = "_", -- NOTE: for LaTex reason this is added to default config xd
+    ["_"] = "^",
+    ["/"] = "\\",
+    ["\\"] = "/",
 		["<"] = ">",
 		[">"] = "<",
 		["<="] = ">=",
@@ -19,7 +25,6 @@ MiniReverse.config = {
 		["!="] = "==",
 		["==="] = "!==",
 		["!=="] = "===",
-		-- 扩展类
 		["on"] = "off",
 		["off"] = "on",
 	},
