@@ -38,3 +38,36 @@ A lightweight Neovim plugin, aiming to auto **reverse** the paired content(i.e. 
   end
 }
 ```
+## default settings
+```lua
+-- Default configuration
+MiniReverse.config = {
+	mappings = { toggle = "tr" },
+	reverse_pairs = {
+		["left"] = "right",
+		["right"] = "left",
+		["up"] = "down",
+		["down"] = "up",
+		["true"] = "false",
+		["false"] = "true",                   i
+		["+"] = "-",
+		["-"] = "+",
+		["^"] = "_", -- NOTE: for some LaTex reason it is added into the default config
+		["_"] = "^",
+		["/"] = "\\", -- NOTE: in case that you need to convert \ and /
+		["\\"] = "/",
+		["<"] = ">",
+		[">"] = "<",
+		["<="] = ">=",
+		[">="] = "<=",
+		["=="] = "!=",
+		["!="] = "==",
+		["==="] = "!==",
+		["!=="] = "===",
+		["on"] = "off",
+		["off"] = "on",
+	},
+	ignore_case = false,
+	silent = false,
+}
+```
