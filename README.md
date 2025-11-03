@@ -44,17 +44,22 @@ A lightweight Neovim plugin, aiming to auto **reverse** the paired content(i.e. 
 MiniReverse.config = {
 	mappings = { toggle = "tr" },
 	reverse_pairs = {
+    -- NOTE: most common pair: True && False
+		["true"] = "false",
+		["false"] = "true",
+
+    -- NOTE: for some naming habit reason, these are added into default
 		["left"] = "right",
 		["right"] = "left",
 		["up"] = "down",
 		["down"] = "up",
-		["true"] = "false",
-		["false"] = "true",                   i
+
+    -- NOTE: addop, mulop && relop pair
 		["+"] = "-",
 		["-"] = "+",
-		["^"] = "_", -- NOTE: for some LaTex reason it is added into the default config
+		["^"] = "_",
 		["_"] = "^",
-		["/"] = "\\", -- NOTE: in case that you need to convert \ and /
+		["/"] = "\\",
 		["\\"] = "/",
 		["<"] = ">",
 		[">"] = "<",
@@ -64,10 +69,20 @@ MiniReverse.config = {
 		["!="] = "==",
 		["==="] = "!==",
 		["!=="] = "===",
+
 		["on"] = "off",
 		["off"] = "on",
+
+    ["yes"] = "no";
+    ["no"] = "yes";
+
+    -- NOTE: these pairs can be replaced by Code Action actually
+    ["."] = "->";
+    ["&"] = "*";
 	},
 	ignore_case = false,
 	silent = false,
 }
+
+
 ```
