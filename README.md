@@ -39,6 +39,7 @@ A lightweight Neovim plugin, aiming to auto **reverse** the paired content(i.e. 
 }
 ```
 ## default settings
+- These default pairs are **empirical**
 ```lua
 -- Default configuration
 MiniReverse.config = {
