@@ -5,12 +5,17 @@ local H = {}
 MiniReverse.config = {
 	mappings = { toggle = "tr" },
 	reverse_pairs = {
+    -- NOTE: most common pair: True && False
+		["true"] = "false",
+		["false"] = "true",
+
+    -- NOTE: for some naming habit reason, these are added into default
 		["left"] = "right",
 		["right"] = "left",
 		["up"] = "down",
 		["down"] = "up",
-		["true"] = "false",
-		["false"] = "true",
+
+    -- NOTE: addop, mulop && relop pair
 		["+"] = "-",
 		["-"] = "+",
 		["^"] = "_",
@@ -25,8 +30,16 @@ MiniReverse.config = {
 		["!="] = "==",
 		["==="] = "!==",
 		["!=="] = "===",
+
 		["on"] = "off",
 		["off"] = "on",
+
+    ["yes"] = "no";
+    ["no"] = "yes";
+
+    -- NOTE: these pairs can be replaced by Code Action actually
+    ["."] = "->";
+    ["&"] = "*";
 	},
 	ignore_case = false,
 	silent = false,
