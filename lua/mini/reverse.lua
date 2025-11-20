@@ -34,12 +34,12 @@ MiniReverse.config = {
 		["on"] = "off",
 		["off"] = "on",
 
-    ["yes"] = "no";
-    ["no"] = "yes";
+    	["yes"] = "no";
+    	["no"] = "yes";
 
     -- NOTE: these pairs can be replaced by Code Action actually
-    ["."] = "->";
-    ["&"] = "*";
+    	["."] = "->";
+    	["&"] = "*";
 	},
 	ignore_case = false,
 	silent = false,
